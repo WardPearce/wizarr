@@ -7,6 +7,7 @@ class AccountModel(BaseModel):
     password_hash: str
     email: str
     created: datetime
+    scopes: list[str] = []
     last_login: datetime | None = None
     services: list[str] = []
 

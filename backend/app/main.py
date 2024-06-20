@@ -1,27 +1,20 @@
 import importlib.metadata
-from typing import Any, Optional
 
 from aiohttp import ClientSession
+from helpers.jwt import retrieve_account_handler
 from litestar import Litestar, Request
 from litestar.config.cors import CORSConfig
-from litestar.connection import ASGIConnection
 from litestar.datastructures import State
 from litestar.openapi import OpenAPIConfig
 from litestar.openapi.plugins import ScalarRenderPlugin
 from litestar.openapi.spec import Contact, License, Server
-from litestar.security.jwt import JWTCookieAuth, Token
+from litestar.security.jwt import JWTCookieAuth
 from motor import motor_asyncio
 from pydantic import BaseModel
 
 from app.controllers import routes
 from app.env import SETTINGS
 from app.models.account import AccountModel
-
-
-async def retrieve_account_handler(
-    token: "Token", connection: ASGIConnection[Any, Any, Any, Any]
-) -> Optional[AccountModel]:
-    pass
 
 
 class ScalarRenderPluginRouteFix(ScalarRenderPlugin):
@@ -53,7 +46,7 @@ app = Litestar(
         }
     ),
     openapi_config=OpenAPIConfig(
-        title="",
+        title="Wizarr",
         description="Wizarr is an advanced user invitation and management system for Jellyfin, Plex, Emby etc.",
         version=importlib.metadata.version("wizarr"),
         render_plugins=[ScalarRenderPluginRouteFix()],
@@ -78,7 +71,7 @@ app = Litestar(
     on_app_init=[
         JWTCookieAuth[AccountModel](
             retrieve_user_handler=retrieve_account_handler,
-            token_secret=SETTINGS.jwt_token,
+            token_secret=SETTINGS.jwt.secret,
             exclude=["/login", "/schema"],
             exclude_opt_key="exclude_auth",
         ).on_app_init

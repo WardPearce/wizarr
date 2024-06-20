@@ -10,6 +10,11 @@ class MongoDB(BaseModel):
     collection: str = "wizarr_v5"
 
 
+class JWT(BaseModel):
+    secret: str = Field(default=secrets.token_urlsafe(), min_length=32)
+    expires_in: int = 2678400
+
+
 class Settings(BaseSettings):
     mongo: MongoDB = MongoDB()
 
@@ -18,7 +23,7 @@ class Settings(BaseSettings):
 
     debug: bool = False
 
-    jwt_token: str = Field(secrets.token_urlsafe(), min_length=32)
+    jwt: JWT = JWT()
 
     model_config = {"env_prefix": "wizarr_"}
 
