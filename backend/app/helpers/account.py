@@ -37,6 +37,17 @@ class Account:
 
         await self._state.mongo.update_one(self._where, {"$set": to_set})
 
+    async def validate_password(self, password_attempt: str) -> None:
+        user = await self.get()
+        ARGON.verify(user.password_hash, password_attempt)
+
+    async def change_password(self, old_password: str, new_password: str) -> None:
+        await self.validate_password(old_password)
+
+        await self._state.mongo.account.update_one(
+            self._where, {"$set": {"password_hash": ARGON.hash(new_password)}}
+        )
+
     async def create(self, password: str) -> AccountModel:
         if await self.exists():
             raise EmailTaken()
