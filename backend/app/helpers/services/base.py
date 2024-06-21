@@ -76,6 +76,9 @@ class ServiceBase:
         if "headers" not in kwargs:
             kwargs["headers"] = {}
 
+        if self._service.type == "emby":
+            kwargs["headers"]["Accept"] = 'application/json, profile="PascalCase"'
+
         kwargs["headers"][
             "X-Emby-Token" if self._service.type != "plex" else "X-Plex-Token"
         ] = self._service.key

@@ -29,7 +29,7 @@ def add_user_blocking(
 
 
 class PlexInvite(ServiceInviteBase):
-    async def add(self, name: str, password: str) -> None:
+    async def add(self, password: str, name: None = None) -> None:
         invite = await super().add(name, password)
 
         with ThreadPoolExecutor() as pool:
