@@ -22,6 +22,7 @@ class CreateInviteModel(BaseModel):
     hidden: bool | None = None
     live_tv: bool | None = None
     sessions: int | None = None
+    email: str | None = None
     plex: CreatePlexInviteModel | None = None
     jellyfin: CreateJellyfinInviteModel | None = None
     emby: CreateEmbyInviteModel | None = None
