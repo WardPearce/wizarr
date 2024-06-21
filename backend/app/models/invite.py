@@ -42,7 +42,6 @@ class EmbyInviteModel(CreateEmbyInviteModel):
 
 class InviteModel(CreateInviteModel):
     id: str = Field(alias="_id")
-    password: str
     plex: PlexInviteModel | None = None
     jellyfin: JellyfinInviteModel | None = None
     emby: EmbyInviteModel | None = None

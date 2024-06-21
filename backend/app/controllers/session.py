@@ -32,4 +32,6 @@ async def invalidate_session(
         await request.app.stores.get("auth_cache").delete(session_id)
 
 
-routes = Router(path="/session", route_handlers=[get_sessions, invalidate_session])
+routes = Router(
+    path="/session", tags=["session"], route_handlers=[get_sessions, invalidate_session]
+)

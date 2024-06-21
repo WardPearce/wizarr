@@ -18,12 +18,3 @@ def check_password(password: str) -> None:
     zxcvbn_results = zxcvbn(password)
     if zxcvbn_results["score"] < 3:
         raise WeakPassword(feedback=zxcvbn_results["feedback"])
-
-
-def invite_code_decoded(self) -> Tuple[str, str]:
-    try:
-        _id, password = self._code.split(":")
-    except ValueError:
-        raise InvalidInviteCode()
-
-    return _id, password

@@ -5,7 +5,7 @@ from argon2.exceptions import VerificationError
 
 from app.const import ARGON
 from app.exceptions import InvalidInviteCode, WeakPassword
-from app.helpers.misc import check_password, invite_code_decoded
+from app.helpers.misc import check_password
 from app.models.invite import InviteModel
 from app.models.services.base import ServiceApiModel
 from app.state import State
@@ -31,27 +31,21 @@ class ServiceInviteBase:
         return invite
 
     async def delete(self) -> None:
-        id_, _ = invite_code_decoded(self._code)
-
-        await self._state.mongo.delete_one({"_id": id_})
+        await self._state.mongo.delete_one({"_id": self._code})
 
     async def get(self) -> InviteModel:
-        id_, _ = invite_code_decoded(self._code)
-
-        result = await self._state.mongo.invite.find_one({"_id", id_})
+        result = await self._state.mongo.invite.find_one({"_id", self._code})
         if not result:
             raise InvalidInviteCode()
 
         return InviteModel(**result)
 
     async def validate(self) -> InviteModel:
-        _, password = invite_code_decoded(self._code)
-
         invite = await self.get()
 
         try:
             # Timing attacks
-            ARGON.verify(ARGON.hash(password), password)
+            ARGON.verify(ARGON.hash(invite.id), self._code)
         except VerificationError:
             raise InvalidInviteCode()
 

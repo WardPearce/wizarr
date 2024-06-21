@@ -1,8 +1,6 @@
 import secrets
 from typing import Tuple
 
-from helpers.misc import invite_code_decoded
-
 from app.exceptions import InvalidInviteId, NoPermissionsToService, ServiceNotFound
 from app.helpers.services import Service
 from app.models.invite import (
@@ -20,9 +18,7 @@ class Invite:
         self._code = code
 
     async def get(self) -> InviteModel:
-        id_, _ = invite_code_decoded(self._code)
-
-        result = await self._state.mongo.invite.find_one({"_id": id_})
+        result = await self._state.mongo.invite.find_one({"_id": self._code})
         if not result:
             raise InvalidInviteId()
 
@@ -74,15 +70,11 @@ async def create_invite(
         raise ServiceNotFound()
 
     _id = secrets.token_urlsafe(6)
-
     while await state.mongo.invite.count_documents({"_id": _id}) > 0:
         _id = secrets.token_urlsafe(6)
 
-    password = secrets.token_urlsafe(6)
-
     invite = InviteModel(
         _id=_id,
-        password=password,
         **invite.model_dump(),
     )
 

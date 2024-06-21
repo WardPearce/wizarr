@@ -21,7 +21,7 @@ class InviteController(Controller):
     async def invite_get(self, state: State, code: str) -> InviteModel:
         return await Invite(state, code).get()
 
-    @post("/")
+    @post("/", exclude_from_auth=True)
     async def invite_add(
         self, state: State, data: list[InviteAddModel], code: str
     ) -> None:
