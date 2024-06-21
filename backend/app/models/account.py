@@ -3,6 +3,10 @@ from datetime import datetime
 from pydantic import BaseModel
 
 
+class AccountLoginModel(BaseModel):
+    password: str
+
+
 class AccountModel(BaseModel):
     password_hash: str
     email: str
