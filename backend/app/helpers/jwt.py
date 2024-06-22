@@ -31,6 +31,6 @@ async def retrieve_account_handler(
 JWT_COOKIE_AUTH = JWTCookieAuth[AccountModel](
     retrieve_user_handler=retrieve_account_handler,
     token_secret=SETTINGS.jwt.secret,
-    exclude=["/login", "/schema"],
+    exclude=["/schema"],
     exclude_opt_key="exclude_auth",
 )

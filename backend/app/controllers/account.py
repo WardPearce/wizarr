@@ -18,7 +18,7 @@ from app.state import State
 class LoginController(Controller):
     path = "/{email:str}"
 
-    @post("/login", exclude_from_auth=True)
+    @post("/login", exclude_auth=True)
     async def login(
         self, request: Request, email: str, state: State, data: AccountLoginModel
     ) -> Response[AccountModel]:
